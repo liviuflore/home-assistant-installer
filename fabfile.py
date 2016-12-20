@@ -31,7 +31,7 @@ def install_start():
     
     # setup base dev dir
     with cd("/srv"):
-        sudo("mkdir hass")
+        sudo("mkdir -p hass")
         sudo("chown hass hass")
         with cd("hass"):
             sudo("mkdir -p src")
@@ -115,7 +115,7 @@ def setup_mosquitto():
     """ Install Mosquitto w/ websockets"""
     sudo("useradd mosquitto")
     with cd("/var/lib/"):
-        sudo("mkdir mosquitto")
+        sudo("mkdir -p mosquitto")
         sudo("chown mosquitto:mosquitto mosquitto")
     with cd("/srv/hass/src"):
         sudo("curl -O http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key")
@@ -136,7 +136,7 @@ def setup_mosquitto():
 def setup_libmicrohttpd():
     """ Build and install libmicrohttpd """
     with cd("/srv/hass/src"):
-        sudo("mkdir libmicrohttpd")
+        sudo("mkdir -p libmicrohttpd")
         sudo("chown hass:hass libmicrohttpd")
         sudo("curl -O ftp://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-latest.tar.gz", user="hass")
         sudo("tar zxvf libmicrohttpd-latest.tar.gz")
