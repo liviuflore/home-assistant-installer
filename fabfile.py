@@ -81,7 +81,8 @@ def setup_homeassistant(venv = 0):
         sudo("mkdir -p hass")
         sudo("mkdir -p /home/hass/.homeassistant")
         sudo("chown hass:hass hass")
-        
+    
+    print("Install Home Assistant in virtual env [%d]", venv)
     if venv == 0:
         hass_bin = "/usr/bin/hass"
     else:
