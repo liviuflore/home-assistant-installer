@@ -39,6 +39,9 @@ sudo /usr/bin/pip install fabric
 ## Run fab install ##
 
 echo "-- Run HASS installer [deploy type $fab_deploy_type]"
-git clone https://github.com/liviuflore/home-assistant-installer.git
-( cd /home/$me/home-assistant-installer && fab deploy:venv=$fab_deploy_type -H localhost 2>&1 | tee installation_report.txt )
+if [ ! -d $(dirname "$0")/.git ]; then
+	echo "-- Git clone HASS installer"
+fi
+#git clone https://github.com/liviuflore/home-assistant-installer.git
+#( cd /home/$me/home-assistant-installer && fab deploy:venv=$fab_deploy_type -H localhost 2>&1 | tee installation_report.txt )
 exit
