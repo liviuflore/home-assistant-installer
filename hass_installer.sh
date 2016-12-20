@@ -42,6 +42,9 @@ echo "-- Run HASS installer [deploy type $fab_deploy_type]"
 if [ ! -d $(dirname "$0")/.git ]; then
 	echo "-- Git clone HASS installer"
 	git clone https://github.com/liviuflore/home-assistant-installer.git
+	cd home-assistant-installer
 fi
-( cd /home/$me/home-assistant-installer && fab deploy -H localhost 2>&1 | tee installation_report.txt )
+
+fab deploy -H localhost 2>&1 | tee installation_report.txt
+
 exit

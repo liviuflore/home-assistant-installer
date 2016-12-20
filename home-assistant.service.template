@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=hass
-ExecStart=[HASS_BIN] -c "/home/hass/.homeassistant"
+User=[HASS_USER]
+ExecStart=[HASS_BIN] -c "/home/[HASS_USER]/.homeassistant"
 
 [Install]
 WantedBy=multi-user.target

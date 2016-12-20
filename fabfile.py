@@ -25,17 +25,17 @@ env.warn_only = False
 
 def install_start():
     """ Notify of install start """
-    time.sleep(10)
+    time.sleep(2)
     print("HASS installer is starting...")
-    time.sleep(5)
+    time.sleep(1)
     
     # setup base dev dir
-    with cd("/srv"):
-        sudo("mkdir -p hass")
-        sudo("chown hass hass")
-        with cd("hass"):
-            sudo("mkdir -p src")
-            sudo("chown hass:hass src")
+    #with cd("/srv"):
+    #    sudo("mkdir -p hass")
+    #    #sudo("chown hass hass")
+    #    with cd("hass"):
+    #        sudo("mkdir -p src")
+    #        #sudo("chown hass:hass src")
             
 def install_syscore():
     """ Download and install Host Dependencies. """
@@ -54,7 +54,7 @@ def install_syscore():
     sudo("apt-get install -y libgnutls-dev")
     sudo("apt-get install -y nmap")
     sudo("apt-get install -y net-tools")
-    #sudo("apt-get install -y sudo")
+    sudo("apt-get install -y sudo")
     #sudo("apt-get install -y libglib2.0-dev")
     #sudo("apt-get install -y cython3")
     sudo("apt-get install -y libudev-dev")
@@ -70,44 +70,53 @@ def setup_homeassistant(venv = 0):
     """ Install Home Assistant"""
     sudo("pip3 install --upgrade pip")
     
-    # setup users
-    sudo("id -u hass &>/dev/null || useradd --system hass")
-    sudo("usermod -G dialout -a hass")
-    sudo("usermod -G video -a hass")
-    sudo("usermod -d /home/hass hass")
-    
-    # setup dirs
-    with cd("/home"):
-        sudo("mkdir -p hass")
-        sudo("mkdir -p /home/hass/.homeassistant")
-        sudo("chown hass:hass hass")
-    
     if venv == 0:
         hass_bin = "/usr/bin/hass"
+		hass_user = env.user
     else:
         hass_bin = "/srv/hass/venv/bin/hass"
+		hass_user = "hass"
+		
+		# create user
+		sudo("id -u hass &>/dev/null || useradd --system -rm hass")
+
+		# create hass venv dir
+		with cd("/srv"):
+			sudo("mkdir -p hass")
+			sudo("chown -R hass hass")
+		
         # Install and create home-assistant VirtualEnv
         sudo("pip3 install virtualenv")
         with cd("/srv/hass"):
             sudo("virtualenv -p python3 venv", user="hass")
+			
         # Activate Virtualenv
         sudo("source /srv/hass/venv/bin/activate", user="hass")
 
-    # Install Home-Assistant
-    sudo("chown hass /home/" + env.user + "/.cache")
-    sudo("pip3 install homeassistant", user="hass")
+	sudo("usermod -G dialout -a " + hass_user)
+    sudo("usermod -G video -a " + hass_user)
 
+	# create config dir
+    with cd("/home/" + hass_user):
+        sudo("mkdir -p /home/" + hass_user + "/.homeassistant", user=hass_user)
+		
     # TODO: setup /home/hass/.homeassistant/configuration.yaml
+
+    # Install Home-Assistant
+    if venv == 0:
+		sudo("pip3 install homeassistant")
+	else:
+		sudo("pip3 install homeassistant", user=hass_user)
     
     with open("home-assistant.service.template", "rt") as fin:
         with open("home-assistant.service", "wt") as fout:
             for line in fin:
-                fout.write(line.replace('[HASS_BIN]', hass_bin))
+                fout.write(line.replace('[HASS_BIN]', hass_bin).replace('[HASS_USER]', hass_user))
 
     with cd("/etc/systemd/system/"):
         put("home-assistant.service", "home-assistant.service", use_sudo=True)
     with settings(sudo_user='hass'):
-        sudo(hass_bin + " --script ensure_config --config /home/hass/.homeassistant")
+        sudo(hass_bin + " --script ensure_config --config /home/" + hass_user + "/.homeassistant")
 
     sudo("systemctl enable home-assistant.service")
     sudo("systemctl daemon-reload")
@@ -118,7 +127,8 @@ def setup_mosquitto():
     with cd("/var/lib/"):
         sudo("mkdir -p mosquitto")
         sudo("chown mosquitto:mosquitto mosquitto")
-    with cd("/srv/hass/src"):
+
+    with cd("~"):
         sudo("curl -O http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key")
         sudo("apt-key add mosquitto-repo.gpg.key")
         with cd("/etc/apt/sources.list.d/"):
@@ -131,20 +141,8 @@ def setup_mosquitto():
                 sudo("touch pwfile")
                 sudo("chown mosquitto: pwfile")
                 sudo("chmod 0600 pwfile")
-                sudo("sudo mosquitto_passwd -b pwfile pi raspberry")
+                sudo("sudo mosquitto_passwd -b pwfile " + env.user + " " + env.password)
                 sudo("sudo chown mosquitto: mosquitto.conf")
-
-def setup_libmicrohttpd():
-    """ Build and install libmicrohttpd """
-    with cd("/srv/hass/src"):
-        sudo("mkdir -p libmicrohttpd")
-        sudo("chown hass:hass libmicrohttpd")
-        sudo("curl -O ftp://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-latest.tar.gz", user="hass")
-        sudo("tar zxvf libmicrohttpd-latest.tar.gz")
-        with cd("$(ls -d */|head -n 1)"):
-            sudo("./configure")
-            sudo("make")
-            sudo("make install")
 
 
 #############
@@ -157,5 +155,4 @@ def deploy(venv = 0):
     install_syscore()
     setup_mosquitto()
     setup_homeassistant(venv)
-    #setup_libmicrohttpd()
     #reboot()
