@@ -71,7 +71,7 @@ def setup_homeassistant(venv = 0):
     sudo("pip3 install --upgrade pip")
     
     # setup users
-    sudo("useradd --system hass")
+    sudo("id -u hass &>/dev/null || useradd --system hass")
     sudo("usermod -G dialout -a hass")
     sudo("usermod -G video -a hass")
     sudo("usermod -d /home/hass hass")
@@ -113,7 +113,7 @@ def setup_homeassistant(venv = 0):
 
 def setup_mosquitto():
     """ Install Mosquitto w/ websockets"""
-    sudo("useradd mosquitto")
+    sudo("id -u mosquitto &>/dev/null || useradd mosquitto")
     with cd("/var/lib/"):
         sudo("mkdir -p mosquitto")
         sudo("chown mosquitto:mosquitto mosquitto")
