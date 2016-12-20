@@ -11,11 +11,11 @@ import time
 import os
 
 
-env.hosts = ['localhost']
-env.user = "pi"
-env.password = "raspberry"
-env.warn_only = True
-pi_hardware = os.uname()[4]
+#env.hosts = ['localhost']
+#env.user = "pi"
+#env.password = "raspberry"
+#env.warn_only = True
+#pi_hardware = os.uname()[4]
 
 #######################
 ## Core server setup ##
