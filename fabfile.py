@@ -16,7 +16,7 @@ env.hosts = ['localhost']
 #env.password = "raspberry"
 env.user = "vagrant"
 env.password = "vagrant"
-env.warn_only = True
+env.warn_only = False
 #pi_hardware = os.uname()[4]
 
 #######################
