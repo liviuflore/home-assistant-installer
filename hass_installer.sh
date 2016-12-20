@@ -49,6 +49,8 @@ if [ "" == "$PKG_PYPIP" ]; then
 	sudo apt-get --force-yes --yes install python-pip
 fi
 
+sudo apt-get install -y libffi-dev
+
 echo "-- Upgrade pip"
 sudo /usr/bin/pip install --upgrade pip
 
