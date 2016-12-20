@@ -11,10 +11,12 @@ import time
 import os
 
 
-#env.hosts = ['localhost']
+env.hosts = ['localhost']
 #env.user = "pi"
 #env.password = "raspberry"
-#env.warn_only = True
+env.user = "vagrant"
+env.password = "vagrant"
+env.warn_only = True
 #pi_hardware = os.uname()[4]
 
 #######################
@@ -25,7 +27,6 @@ def install_start():
     """ Notify of install start """
     time.sleep(10)
     print("HASS installer is starting...")
-    print("Your Raspberry Pi will reboot when the installer is complete.")
     time.sleep(5)
     
     # setup base dev dir

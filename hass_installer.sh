@@ -27,29 +27,7 @@ me=$(whoami)
 
 echo "-- Run apt-get UPDATE"
 sudo apt-get -y update
-
-PKG_GIT=$(dpkg-query -W --showformat='${Status}\n' git|grep "install ok installed")
-echo "-- Checking for python-pip: $PKG_GIT"
-if [ "" == "$PKG_GIT" ]; then
-	echo "No git. Setting up git."
-	sudo apt-get --force-yes --yes install git
-fi
-
-PKG_PYDEV=$(dpkg-query -W --showformat='${Status}\n' python-dev|grep "install ok installed")
-echo "-- Checking for python-dev: $PKG_PYDEV"
-if [ "" == "$PKG_PYDEV" ]; then
-	echo "No python-dev. Setting up python-dev."
-	sudo apt-get --force-yes --yes install python-dev
-fi
-
-PKG_PYPIP=$(dpkg-query -W --showformat='${Status}\n' python-pip|grep "install ok installed")
-echo "-- Checking for python-pip: $PKG_PYPIP"
-if [ "" == "$PKG_PYPIP" ]; then
-	echo "No python-pip. Setting up python-pip."
-	sudo apt-get --force-yes --yes install python-pip
-fi
-
-sudo apt-get install -y libffi-dev
+sudo apt-get install -y git python-pip python-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg8-dev zlib1g-dev
 
 echo "-- Upgrade pip"
 sudo /usr/bin/pip install --upgrade pip
