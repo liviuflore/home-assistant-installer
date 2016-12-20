@@ -82,7 +82,6 @@ def setup_homeassistant(venv = 0):
         sudo("mkdir -p /home/hass/.homeassistant")
         sudo("chown hass:hass hass")
     
-    print("Install Home Assistant in virtual env [%d]", venv)
     if venv == 0:
         hass_bin = "/usr/bin/hass"
     else:
@@ -95,6 +94,7 @@ def setup_homeassistant(venv = 0):
         sudo("source /srv/hass/venv/bin/activate", user="hass")
 
     # Install Home-Assistant
+    sudo("chown hass /home/" + env.user + "/.cache")
     sudo("pip3 install homeassistant", user="hass")
 
     # TODO: setup /home/hass/.homeassistant/configuration.yaml
@@ -152,7 +152,7 @@ def setup_libmicrohttpd():
 #############
 
 def deploy(venv = 0):
-
+    print("Install Home Assistant in virtual env [%d]" % venv)
     install_start()
     install_syscore()
     setup_mosquitto()
