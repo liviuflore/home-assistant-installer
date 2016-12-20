@@ -71,7 +71,7 @@ def setup_homeassistant(venv = 0):
     sudo("pip3 install --upgrade pip")
     
     if venv == 0:
-        hass_bin = "/usr/bin/hass"
+        hass_bin = "/usr/local/bin/hass"
         hass_user = env.user
     else:
         hass_bin = "/srv/hass/venv/bin/hass"
