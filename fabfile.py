@@ -72,41 +72,41 @@ def setup_homeassistant(venv = 0):
     
     if venv == 0:
         hass_bin = "/usr/bin/hass"
-		hass_user = env.user
+        hass_user = env.user
     else:
         hass_bin = "/srv/hass/venv/bin/hass"
-		hass_user = "hass"
-		
-		# create user
-		sudo("id -u hass &>/dev/null || useradd --system -rm hass")
+        hass_user = "hass"
+        
+        # create user
+        sudo("id -u hass &>/dev/null || useradd --system -rm hass")
 
-		# create hass venv dir
-		with cd("/srv"):
-			sudo("mkdir -p hass")
-			sudo("chown -R hass hass")
-		
+        # create hass venv dir
+        with cd("/srv"):
+            sudo("mkdir -p hass")
+            sudo("chown -R hass hass")
+        
         # Install and create home-assistant VirtualEnv
         sudo("pip3 install virtualenv")
         with cd("/srv/hass"):
             sudo("virtualenv -p python3 venv", user="hass")
-			
+            
         # Activate Virtualenv
         sudo("source /srv/hass/venv/bin/activate", user="hass")
 
-	sudo("usermod -G dialout -a " + hass_user)
+    sudo("usermod -G dialout -a " + hass_user)
     sudo("usermod -G video -a " + hass_user)
 
-	# create config dir
+    # create config dir
     with cd("/home/" + hass_user):
         sudo("mkdir -p /home/" + hass_user + "/.homeassistant", user=hass_user)
-		
+        
     # TODO: setup /home/hass/.homeassistant/configuration.yaml
 
     # Install Home-Assistant
     if venv == 0:
-		sudo("pip3 install homeassistant")
-	else:
-		sudo("pip3 install homeassistant", user=hass_user)
+        sudo("pip3 install homeassistant")
+    else:
+        sudo("pip3 install homeassistant", user=hass_user)
     
     with open("home-assistant.service.template", "rt") as fin:
         with open("home-assistant.service", "wt") as fout:

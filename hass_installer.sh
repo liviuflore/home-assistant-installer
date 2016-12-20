@@ -7,17 +7,17 @@
 fab_deploy_type=0
 
 while getopts ":nv" opt; do
-	case $opt in
-		n)
-			fab_deploy_type=0
-			;;
-		v)
-			fab_deploy_type=1
-			;;
-		\?)
-			echo "Invalid option: -$OPTARG" >&2
-			;;
-	esac
+    case $opt in
+        n)
+            fab_deploy_type=0
+            ;;
+        v)
+            fab_deploy_type=1
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            ;;
+    esac
 done
 
 
@@ -40,9 +40,9 @@ sudo /usr/bin/pip install fabric
 
 echo "-- Run HASS installer [deploy type $fab_deploy_type]"
 if [ ! -d $(dirname "$0")/.git ]; then
-	echo "-- Git clone HASS installer"
-	git clone https://github.com/liviuflore/home-assistant-installer.git
-	cd home-assistant-installer
+    echo "-- Git clone HASS installer"
+    git clone https://github.com/liviuflore/home-assistant-installer.git
+    cd home-assistant-installer
 fi
 
 fab deploy -H localhost 2>&1 | tee installation_report.txt
