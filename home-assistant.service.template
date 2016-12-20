@@ -1,0 +1,11 @@
+[Unit]
+Description=Home Assistant
+After=network.target
+
+[Service]
+Type=simple
+User=hass
+ExecStart=[HASS_BIN] -c "/home/hass/.homeassistant"
+
+[Install]
+WantedBy=multi-user.target
