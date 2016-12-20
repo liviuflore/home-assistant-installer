@@ -4,12 +4,15 @@
 # Permission to copy and modify is granted under the MIT License
 # Last revised 5/15/2016
 
-fab_deploy_type=deploy
+fab_deploy_type=0
 
-while getopts ":n" opt; do
+while getopts ":nv" opt; do
 	case $opt in
 		n)
-			fab_deploy_type=deploy_novenv
+			fab_deploy_type=0
+			;;
+		v)
+			fab_deploy_type=1
 			;;
 		\?)
 			echo "Invalid option: -$OPTARG" >&2
@@ -57,5 +60,5 @@ sudo /usr/bin/pip install fabric
 
 echo "-- Run HASS installer [deploy type $fab_deploy_type]"
 git clone https://github.com/liviuflore/home-assistant-installer.git
-( cd /home/$me/home-assistant-installer && fab $fab_deploy_type -H localhost 2>&1 | tee installation_report.txt )
+( cd /home/$me/home-assistant-installer && fab deploy:venv=$fab_deploy_type -H localhost 2>&1 | tee installation_report.txt )
 exit
