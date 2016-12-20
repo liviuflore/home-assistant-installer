@@ -10,7 +10,7 @@ How To:
 *  Run the following command
 
 ```bash
-$ wget -Nnv https://raw.githubusercontent.com/home-assistant/fabric-home-assistant/master/hass_rpi_installer.sh && bash hass_rpi_installer.sh
+$ wget -Nnv https://raw.githubusercontent.com/liviuflore/home-assistant-installer/master/hass_installer.sh && bash hass_rpi_installer.sh
 ```
 *Note this command is one line and not run as sudo*
 
