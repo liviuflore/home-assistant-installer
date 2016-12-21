@@ -155,15 +155,23 @@ def setup_mosquitto():
                 sudo("sudo chown mosquitto: mosquitto.conf")
 
 
+def str_to_bool(s):
+    if s == 'True':
+         return True
+    elif s == 'False':
+         return False
+    else:
+         raise ValueError("Cannot covert {} to a bool".format(s))
+         
 #############
 ## Deploy! ##
 #############
 
-def deploy(venv = use_virtualenv, configuration = use_configuration, ssl = use_ssl):
+def deploy(venv = str(use_virtualenv), configuration = use_configuration, ssl = str(use_ssl)):
     
-    global use_virtualenv
-    global use_configuration
-    global use_ssl
+    global use_virtualenv; use_virtualenv = str_to_bool(venv)
+    global use_configuration; use_configuration = configuration
+    global use_ssl; use_ssl = str_to_bool(ssl)
     print("Install Home Assistant")
     print("  virtual environment [%r]" % use_virtualenv)
     print("  configuration       [%s]" % use_configuration)
