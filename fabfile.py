@@ -179,7 +179,7 @@ def str_to_bool(s):
          return False
     else:
          raise ValueError("Cannot covert {} to a bool".format(s))
-         
+
 #############
 ## Deploy! ##
 #############
@@ -195,8 +195,8 @@ def deploy(venv = str(use_virtualenv), configuration = use_configuration, ssl = 
     print("  ssl                 [%r]" % use_ssl)
     
     install_start()
-#    install_syscore()
+    install_syscore()
     setup_mosquitto()
-#    setup_homeassistant()
+    setup_homeassistant()
     
     #reboot()
