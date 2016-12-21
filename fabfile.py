@@ -189,7 +189,7 @@ def deploy(venv = str(use_virtualenv), configuration = use_configuration, ssl = 
     print("  configuration       [%s]" % use_configuration)
     print("  ssl                 [%r]" % use_ssl)
     print("  host                [%s]" % env.host)
-    print("  user                [%u]" % env.user)
+    print("  user                [%s]" % env.user)
     
     install_start()
     install_syscore()
