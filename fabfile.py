@@ -177,9 +177,9 @@ def deploy(venv = str(use_virtualenv), configuration = use_configuration, ssl = 
     print("  configuration       [%s]" % use_configuration)
     print("  ssl                 [%r]" % use_ssl)
     
-    #install_start()
-    #install_syscore()
-    #setup_mosquitto()
-    #setup_homeassistant()
+    install_start()
+    install_syscore()
+    setup_mosquitto()
+    setup_homeassistant()
     
     #reboot()
