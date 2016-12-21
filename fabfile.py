@@ -9,6 +9,7 @@ from fabric.api import *
 import fabric.contrib.files
 import time
 import os
+import platform
 
 
 env.hosts = ['localhost']
@@ -29,14 +30,6 @@ def install_start():
     print("HASS installer is starting...")
     time.sleep(1)
     
-    # setup base dev dir
-    #with cd("/srv"):
-    #    sudo("mkdir -p hass")
-    #    #sudo("chown hass hass")
-    #    with cd("hass"):
-    #        sudo("mkdir -p src")
-    #        #sudo("chown hass:hass src")
-            
 def install_syscore():
     """ Download and install Host Dependencies. """
     sudo("apt-get install -y python-pip")
@@ -122,12 +115,9 @@ def setup_homeassistant(venv = 0, configuration=""):
     with settings(sudo_user=hass_user):
         sudo(hass_bin + " --script ensure_config --config /home/" + hass_user + "/.homeassistant")
 
-    cmd = "cat /etc/lsb-release | grep DISTRIB_RELEASE | awk -F'=' '{print $2}'"
-    with settings(hide('everything'), warn_only=True):
-        os_rel = run(cmd)
-        if float(os_rel) >= 15.04:
-            sudo("systemctl enable home-assistant.service")
-            sudo("systemctl daemon-reload")
+    if float(platform.dist()[1]) >= 15.04:
+        sudo("systemctl enable home-assistant.service")
+        sudo("systemctl daemon-reload")
 
 def setup_mosquitto():
     """ Install Mosquitto w/ websockets"""
