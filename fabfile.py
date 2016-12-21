@@ -133,7 +133,7 @@ def setup_homeassistant():
         put("HAstart.sh", "/home/" + hass_user)
 
 def setup_mosquitto():
-    """ Install Mosquitto w/ websockets"""
+    """ Install Mosquitto w/ websockets w/ ssl"""
     sudo("id -u mosquitto &>/dev/null || useradd mosquitto")
     with cd("/var/lib/"):
         sudo("mkdir -p mosquitto")
@@ -147,7 +147,23 @@ def setup_mosquitto():
             sudo("apt-get update")
             sudo("apt-cache search mosquitto")
             sudo("apt-get install -y mosquitto mosquitto-clients")
+            
             with cd("/etc/mosquitto"):
+            
+                if use_ssl:
+                    sudo("mkdir -p /srv/mosquitto")
+                    sudo("chown mosquitto:mosquitto /srv/mosquitto")
+                    with cd("/srv/mosquitto"):
+                        sudo("wget -Nnv https://raw.githubusercontent.com/owntracks/tools/master/TLS/generate-CA.sh", user="mosquitto")
+                        sudo("chmod +x ./generate-CA.sh")
+                        sudo("./generate-CA.sh")
+                        sudo("cp ca.crt /etc/mosquitto/certs")
+                        sudo("cp " + platform.node() + ".* /etc/mosquitto/certs")
+                        
+                with open("mosquitto.conf.template", "rt") as fin:
+                    with open("mosquitto.conf", "wt") as fout:
+                        for line in fin:
+                            fout.write(line.replace('[HOSTNAME]', platform.node()))
                 put("mosquitto.conf", "mosquitto.conf", use_sudo=True)
                 sudo("touch pwfile")
                 sudo("chown mosquitto: pwfile")
@@ -179,8 +195,8 @@ def deploy(venv = str(use_virtualenv), configuration = use_configuration, ssl = 
     print("  ssl                 [%r]" % use_ssl)
     
     install_start()
-    install_syscore()
+#    install_syscore()
     setup_mosquitto()
-    setup_homeassistant()
+#    setup_homeassistant()
     
     #reboot()

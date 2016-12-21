@@ -1,0 +1,70 @@
+# Config file for mosquitto
+# See mosquitto.conf(5) for more information.
+
+
+# =================================================================
+# General configuration
+# =================================================================
+
+pid_file /var/run/mosquitto.pid
+
+user mosquitto
+
+
+# =================================================================
+# listeners
+# =================================================================
+
+# Plain MQTT protocol
+listener 1883
+
+# MQTT over TLS/SSL
+listener 8883
+cafile /etc/mosquitto/certs/ca.crt
+certfile /etc/mosquitto/certs/[HOSTNAME].crt
+keyfile /etc/mosquitto/certs/[HOSTNAME].key
+
+# Plain WebSockets configuration
+listener 9001
+protocol websockets
+
+# WebSockets over TLS/SSL
+listener 9883
+protocol websockets
+cafile /etc/mosquitto/certs/ca.crt
+certfile /etc/mosquitto/certs/[HOSTNAME].crt
+keyfile /etc/mosquitto/certs/[HOSTNAME].key
+
+
+# =================================================================
+# Persistence
+# =================================================================
+
+persistence true
+
+persistence_file mosquitto.db
+
+persistence_location /var/lib/mosquitto/
+
+# =================================================================
+# Logging
+# =================================================================
+
+log_dest file /var/log/mosquitto/mosquitto.log
+log_type all
+#log_type error
+#log_type warning
+#log_type notice
+#log_type information
+log_type websockets
+websockets_log_level 0
+log_timestamp true
+
+# =================================================================
+# Security
+# =================================================================
+
+allow_anonymous false
+
+password_file /etc/mosquitto/pwfile
+
