@@ -20,6 +20,10 @@ env.password = "vagrant"
 env.warn_only = False
 #pi_hardware = os.uname()[4]
 
+use_virtualenv = False
+use_configuration = ""
+use_ssl = False
+
 #######################
 ## Core server setup ##
 #######################
@@ -59,11 +63,11 @@ def install_syscore():
 
 
 
-def setup_homeassistant(venv = 0, configuration=""):
+def setup_homeassistant():
     """ Install Home Assistant"""
     sudo("pip3 install --upgrade pip")
     
-    if venv == 0:
+    if use_virtualenv == 0:
         hass_bin = "/usr/local/bin/hass"
         hass_user = env.user
     else:
@@ -94,7 +98,7 @@ def setup_homeassistant(venv = 0, configuration=""):
         sudo("mkdir -p /home/" + hass_user + "/.homeassistant", user=hass_user)
         
     # Install Home-Assistant
-    if venv == 0:
+    if use_virtualenv == 0:
         sudo("pip3 install homeassistant")
     else:
         sudo("pip3 install homeassistant", user=hass_user)
@@ -104,8 +108,8 @@ def setup_homeassistant(venv = 0, configuration=""):
         sudo(hass_bin + " --script ensure_config --config /home/" + hass_user + "/.homeassistant")
 
     # install configuration if provided
-    if configuration != "":
-        put(configuration + "/*", "/home/" + hass_user + "/.homeassistant")
+    if use_configuration != "":
+        put(use_configuration + "/*", "/home/" + hass_user + "/.homeassistant")
 
     # add custom hass variable loading if exists
     hass_bin = "if [ -f /home/" + hass_user + "/.homeassistant/vars.sh ]; then source /home/" + hass_user + "/.homeassistant/vars.sh; fi && " + hass_bin
@@ -155,11 +159,19 @@ def setup_mosquitto():
 ## Deploy! ##
 #############
 
-def deploy(venv = 0, configuration = ""):
-    print("Install Home Assistant in virtual env [%d]" % venv)
-    print("Init Home Assistant configuration with [%s]" % configuration)
-    install_start()
-    install_syscore()
-    setup_mosquitto()
-    setup_homeassistant(venv, configuration)
+def deploy(venv = use_virtualenv, configuration = use_configuration, ssl = use_ssl):
+    
+    global use_virtualenv
+    global use_configuration
+    global use_ssl
+    print("Install Home Assistant")
+    print("  virtual environment [%r]" % use_virtualenv)
+    print("  configuration       [%s]" % use_configuration)
+    print("  ssl                 [%r]" % use_ssl)
+    
+    #install_start()
+    #install_syscore()
+    #setup_mosquitto()
+    #setup_homeassistant()
+    
     #reboot()
