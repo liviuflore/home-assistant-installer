@@ -2,12 +2,12 @@
 # eg: ./hass_installer.sh -vsc /vagrant/hassconfig -h 192.168.1.21 -u pi
 
 virtualenv=False
-usessl=True
+usessl=False
 config_path=''
 target_host=localhost
 target_user=$USER
 
-TEMP=`getopt -o vschu: --long virtual,ssl,config:,host:,user: -n 'hass_installer.sh' -- "$@"`
+TEMP=`getopt -o vsc:h:u: --long virtual,ssl,config:,host:,user: -n 'hass_installer.sh' -- "$@"`
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 eval set -- "$TEMP"
 
@@ -19,10 +19,9 @@ while true ; do
         -h|--host) target_host=$2 ; shift 2 ;;
         -u|--user) target_user=$2 ; shift 2 ;;
         --) shift ; break ;;
-        \?) echo "Invalid option: -$OPTARG" >&2 ;;
+        *) echo "Internal error!" ; exit 1 ;;
     esac
 done
-
 
 ## Run pre-install apt package dependency checks ##
 
