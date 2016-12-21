@@ -110,9 +110,10 @@ def setup_homeassistant(venv = 0, configuration=""):
                     fout.write(line.replace('[HASS_BIN]', hass_bin).replace('[HASS_USER]', hass_user))
     else:
         # TODO: make upstart script
-        with open("~/HAstart.sh", "wt") as fout:
-            fout.write("#!/bin/bash\n") 
-            fout.write(hass_bin + " --config /home/" + hass_user + "/.homeassistant\n")
+        with cd("/home/" + hass_user):
+            with open("HAstart.sh", "wt") as fout:
+                fout.write("#!/bin/bash\n") 
+                fout.write(hass_bin + " --config /home/" + hass_user + "/.homeassistant\n")
 
     with cd("/etc/systemd/system/"):
         put("home-assistant.service", "home-assistant.service", use_sudo=True)
