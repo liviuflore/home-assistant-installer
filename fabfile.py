@@ -108,7 +108,7 @@ def setup_homeassistant(venv = 0, configuration=""):
         put(configuration + "/*", "/home/" + hass_user + "/.homeassistant")
 
     # add custom hass variable loading if exists
-    hass_bin = "if [ -f /home/" + hass_user + "/.homeassistant/vars.sh ]; then source vars.sh; fi && " + hass_bin
+    hass_bin = "if [ -f /home/" + hass_user + "/.homeassistant/vars.sh ]; then source /home/" + hass_user + "/.homeassistant/vars.sh; fi && " + hass_bin
     
     # create autostart file
     if float(platform.dist()[1]) >= 15.04:
