@@ -2,6 +2,7 @@
 # Fabfile to:
 #    - deploy supporting HA components
 #    - deploy HA
+#    - usage: fab deploy:configuration=/vagrant/hassconfig,venv=False,ssl=True -H localhost 2>&1
 ########################################
 
 # Import Fabric's API module
