@@ -99,35 +99,33 @@ def setup_homeassistant(venv = 0, configuration=""):
     else:
         sudo("pip3 install homeassistant", user=hass_user)
 
-    # add var loading if exists
-    hass_bin = "if [ -f /home/" + hass_user + "/.homeassistant/vars.sh ]; then source vars.sh; fi && " + hass_bin
+    # make default configuration
+    with settings(sudo_user=hass_user):
+        sudo(hass_bin + " --script ensure_config --config /home/" + hass_user + "/.homeassistant")
 
+    # install configuration if provided
+    if configuration != "":
+        put(configuration + "/*", "/home/" + hass_user + "/.homeassistant")
+
+    # add custom hass variable loading if exists
+    hass_bin = "if [ -f /home/" + hass_user + "/.homeassistant/vars.sh ]; then source vars.sh; fi && " + hass_bin
+    
     # create autostart file
     if float(platform.dist()[1]) >= 15.04:
         with open("home-assistant.service.template", "rt") as fin:
             with open("home-assistant.service", "wt") as fout:
                 for line in fin:
                     fout.write(line.replace('[HASS_BIN]', hass_bin).replace('[HASS_USER]', hass_user))
-    else:
-        # TODO: make upstart script
-        with cd("/home/" + hass_user):
-            with open("HAstart.sh", "wt") as fout:
-                fout.write("#!/bin/bash\n") 
-                fout.write(hass_bin + " --config /home/" + hass_user + "/.homeassistant\n")
-
-    with cd("/etc/systemd/system/"):
-        put("home-assistant.service", "home-assistant.service", use_sudo=True)
-    with settings(sudo_user=hass_user):
-        sudo(hass_bin + " --script ensure_config --config /home/" + hass_user + "/.homeassistant")
-
-    # install configuration if provided
-    if configuration != "":
-        with cd("/home/" + hass_user + "/.homeassistant"):
-            put(configuration + "/*")
-            
-    if float(platform.dist()[1]) >= 15.04:
+        with cd("/etc/systemd/system/"):
+            put("home-assistant.service", "home-assistant.service", use_sudo=True)
         sudo("systemctl enable home-assistant.service")
         sudo("systemctl daemon-reload")
+    else:
+        # TODO: make upstart script
+        with open("HAstart.sh", "wt") as fout:
+            fout.write("#!/bin/bash\n") 
+            fout.write(hass_bin + " --config /home/" + hass_user + "/.homeassistant\n")
+        put("HAstart.sh", "/home/" + hass_user)
 
 def setup_mosquitto():
     """ Install Mosquitto w/ websockets"""
