@@ -66,7 +66,7 @@ def install_syscore():
 
 
 
-def setup_homeassistant(venv = 0):
+def setup_homeassistant(venv = 0, configuration=""):
     """ Install Home Assistant"""
     sudo("pip3 install --upgrade pip")
     
@@ -101,6 +101,10 @@ def setup_homeassistant(venv = 0):
         sudo("mkdir -p /home/" + hass_user + "/.homeassistant", user=hass_user)
         
     # TODO: setup /home/hass/.homeassistant/configuration.yaml
+    hass_bin = "if [ -f /home/" + hass_user + "/.homeassistant/vars.sh ]; then source vars.sh; fi && " + hass_bin    
+    if configuration != "":
+        with cd("/home/" + hass_user + "/.homeassistant"):
+            put(configuration + "/*")
 
     # Install Home-Assistant
     if venv == 0:
@@ -153,10 +157,11 @@ def setup_mosquitto():
 ## Deploy! ##
 #############
 
-def deploy(venv = 0):
+def deploy(venv = 0, configuration = ""):
     print("Install Home Assistant in virtual env [%d]" % venv)
+    print("Init Home Assistant configuration with [%s]" % configuration)
     install_start()
     install_syscore()
     setup_mosquitto()
-    setup_homeassistant(venv)
+    setup_homeassistant(venv, configuration)
     #reboot()
