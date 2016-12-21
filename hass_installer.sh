@@ -2,7 +2,7 @@
 # eg: ./hass_installer.sh -vsc /vagrant/hassconfig -h 192.168.1.21 -u pi
 
 virtualenv=False
-usessl=False
+usessl=True
 config_path=''
 target_host=localhost
 target_user=$USER
