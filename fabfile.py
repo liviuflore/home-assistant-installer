@@ -118,8 +118,12 @@ def setup_homeassistant(venv = 0):
     with settings(sudo_user=hass_user):
         sudo(hass_bin + " --script ensure_config --config /home/" + hass_user + "/.homeassistant")
 
-    sudo("systemctl enable home-assistant.service")
-    sudo("systemctl daemon-reload")
+    cmd = "cat /etc/lsb-release | grep DISTRIB_RELEASE | awk -F'=' '{print $2}'"
+    with settings(hide('everything'), warn_only=True):
+        os_rel = run(cmd)
+        if float(os_rel) >= 15.04:
+            sudo("systemctl enable home-assistant.service")
+            sudo("systemctl daemon-reload")
 
 def setup_mosquitto():
     """ Install Mosquitto w/ websockets"""
