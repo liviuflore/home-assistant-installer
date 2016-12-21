@@ -13,13 +13,8 @@ import os
 import platform
 
 
-env.hosts = ['localhost']
-#env.user = "pi"
-#env.password = "raspberry"
-env.user = "vagrant"
-env.password = "vagrant"
+#env.hosts = ['localhost']
 env.warn_only = False
-#pi_hardware = os.uname()[4]
 
 use_virtualenv = False
 use_configuration = ""
@@ -193,6 +188,8 @@ def deploy(venv = str(use_virtualenv), configuration = use_configuration, ssl = 
     print("  virtual environment [%r]" % use_virtualenv)
     print("  configuration       [%s]" % use_configuration)
     print("  ssl                 [%r]" % use_ssl)
+    print("  host                [%s]" % env.host)
+    print("  user                [%u]" % env.user)
     
     install_start()
     install_syscore()
