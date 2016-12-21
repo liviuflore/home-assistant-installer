@@ -115,7 +115,7 @@ def setup_homeassistant(venv = 0):
 
     with cd("/etc/systemd/system/"):
         put("home-assistant.service", "home-assistant.service", use_sudo=True)
-    with settings(sudo_user='hass'):
+    with settings(sudo_user=hass_user):
         sudo(hass_bin + " --script ensure_config --config /home/" + hass_user + "/.homeassistant")
 
     sudo("systemctl enable home-assistant.service")
