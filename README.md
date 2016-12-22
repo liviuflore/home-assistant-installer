@@ -13,7 +13,7 @@ How To:
 $ wget -Nnv https://raw.githubusercontent.com/liviuflore/home-assistant-installer/master/hass_installer.sh && bash hass_installer.sh
 $ wget -Nnv https://raw.githubusercontent.com/liviuflore/home-assistant-installer/master/hass_installer.sh && bash ./hass_installer.sh -vsc /vagrant/hassconfig
 $ sudo apt-get install -y git && git clone https://github.com/liviuflore/home-assistant-installer.git
-$ cd home-assistant-installer && ./hass_installer.sh -vsc /vagrant/hassconfig
+$ cd home-assistant-installer && ./hass_installer.sh -sc /vagrant/hassconfig
 $ fab deploy:configuration=/vagrant/hassconfig -H localhost 2>&1
 ```
 *Note this command is one line and not run as sudo*
