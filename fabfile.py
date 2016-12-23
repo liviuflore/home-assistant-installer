@@ -44,7 +44,7 @@ def install_syscore():
     sudo("apt-get install -y curl")
     #sudo("apt-get install -y libgnutls28-dev")
     #sudo("apt-get install -y libgnutlsxx28")
-    sudo("apt-get install -y libgnutls-dev")
+    #sudo("apt-get install -y libgnutls-dev")
     sudo("apt-get install -y nmap")
     sudo("apt-get install -y net-tools")
     sudo("apt-get install -y sudo")
