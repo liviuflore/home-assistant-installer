@@ -18,7 +18,7 @@ env.warn_only = False
 
 use_virtualenv = False
 use_configuration = ""
-use_ssl = False
+use_ssl = True
 
 #######################
 ## Core server setup ##
